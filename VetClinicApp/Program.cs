@@ -14,39 +14,32 @@ namespace VetClinicApp
 
             while (running)
             {
-                Console.WriteLine("=== Ветеринарна клініка ===");
-                Console.WriteLine("1 - Довідка про програму");
-                Console.WriteLine("2 - Таблиця вартості прийому");
-                Console.WriteLine("3 - Завантаження лікарів за тиждень");
-                Console.WriteLine("0 - Вихід");
-                Console.Write("Ваш вибір: ");
-
+                ShowMenu();
                 string choice = Console.ReadLine();
                 Console.WriteLine();
 
                 switch (choice)
                 {
-                    case "1":
-                        ShowAbout();
-                        Pause();
-                        break;
-                    case "2":
-                        ShowCostTable();
-                        Pause();
-                        break;
-                    case "3":
-                        ShowVisitsTable();
-                        Pause();
-                        break;
-                    case "0":
-                        running = false;
-                        break;
+                    case "1": ShowAbout(); Pause(); break;
+                    case "2": ShowCostTable(); Pause(); break;
+                    case "3": ShowVisitsTable(); Pause(); break;
+                    case "0": running = false; break;
                     default:
                         Console.WriteLine("Невірний пункт меню.");
                         Pause();
                         break;
                 }
             }
+        }
+
+        static void ShowMenu()
+        {
+            Console.WriteLine("=== Ветеринарна клініка ===");
+            Console.WriteLine("1 - Довідка про програму");
+            Console.WriteLine("2 - Таблиця вартості прийому");
+            Console.WriteLine("3 - Завантаження лікарів за тиждень");
+            Console.WriteLine("0 - Вихід");
+            Console.Write("Ваш вибір: ");
         }
 
         static void Pause()
@@ -70,6 +63,12 @@ namespace VetClinicApp
             Console.WriteLine("7. cost - вартість у грн");
         }
 
+        // Метод тільки рахує і повертає результат
+        static double CalculateCost(double weight)
+        {
+            return 250 + weight * 35.5 + Math.Sqrt(weight) * 10;
+        }
+
         static void ShowCostTable()
         {
             Console.WriteLine("Розрахунок вартості огляду залежно від ваги тварини:");
@@ -84,21 +83,21 @@ namespace VetClinicApp
 
             for (double w = startWeight; w <= endWeight + 1e-9; w += step)
             {
-                double price = 250 + w * 35.5 + Math.Sqrt(w) * 10;
+                double price = CalculateCost(w);
                 Console.WriteLine($"{w,10:F2} | {price,15:F2}");
             }
         }
 
         static void ShowVisitsTable()
         {
-            Console.Write("Введіть кількість лікарів: ");
+            Console.Write("Введіть кількість лікарів (рядків): ");
             if (!int.TryParse(Console.ReadLine(), out int rows) || rows <= 0)
             {
                 Console.WriteLine("Помилка: введіть число більше 0.");
                 return;
             }
 
-            Console.Write("Введіть кількість днів: ");
+            Console.Write("Введіть кількість днів (стовпців): ");
             if (!int.TryParse(Console.ReadLine(), out int cols) || cols <= 0)
             {
                 Console.WriteLine("Помилка: введіть число більше 0.");
