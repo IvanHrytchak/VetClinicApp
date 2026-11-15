@@ -17,6 +17,7 @@ namespace VetClinicApp
                 Console.WriteLine("=== Ветеринарна клініка ===");
                 Console.WriteLine("1 - Довідка про програму");
                 Console.WriteLine("2 - Таблиця вартості прийому");
+                Console.WriteLine("3 - Завантаження лікарів за тиждень");
                 Console.WriteLine("0 - Вихід");
                 Console.Write("Ваш вибір: ");
 
@@ -31,6 +32,10 @@ namespace VetClinicApp
                         break;
                     case "2":
                         ShowCostTable();
+                        Pause();
+                        break;
+                    case "3":
+                        ShowVisitsTable();
                         Pause();
                         break;
                     case "0":
@@ -82,6 +87,60 @@ namespace VetClinicApp
                 double price = 250 + w * 35.5 + Math.Sqrt(w) * 10;
                 Console.WriteLine($"{w,10:F2} | {price,15:F2}");
             }
+        }
+
+        static void ShowVisitsTable()
+        {
+            Console.Write("Введіть кількість лікарів: ");
+            if (!int.TryParse(Console.ReadLine(), out int rows) || rows <= 0)
+            {
+                Console.WriteLine("Помилка: введіть число більше 0.");
+                return;
+            }
+
+            Console.Write("Введіть кількість днів: ");
+            if (!int.TryParse(Console.ReadLine(), out int cols) || cols <= 0)
+            {
+                Console.WriteLine("Помилка: введіть число більше 0.");
+                return;
+            }
+
+            Console.WriteLine();
+
+            int[] dayTotals = new int[cols];
+            int totalAll = 0;
+
+            Console.Write($"{"Лікар",-12}");
+            for (int c = 1; c <= cols; c++)
+            {
+                Console.Write($"{"День " + c,8}");
+            }
+            Console.WriteLine($"{"Разом",9}");
+
+            for (int r = 1; r <= rows; r++)
+            {
+                Console.Write($"{"Лікар " + r,-12}");
+                int rowSum = 0;
+
+                for (int c = 1; c <= cols; c++)
+                {
+                    int visits = (r * 2 + c) % 5 + 2;
+                    Console.Write($"{visits,8}");
+
+                    rowSum += visits;
+                    dayTotals[c - 1] += visits;
+                }
+
+                Console.WriteLine($"{rowSum,9}");
+                totalAll += rowSum;
+            }
+
+            Console.Write($"{"Загалом",-12}");
+            for (int c = 0; c < cols; c++)
+            {
+                Console.Write($"{dayTotals[c],8}");
+            }
+            Console.WriteLine($"{totalAll,9}");
         }
     }
 }
