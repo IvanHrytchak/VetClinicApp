@@ -49,12 +49,38 @@ namespace VetClinicApp
             Console.Clear();
         }
 
+        static int ReadInt(string prompt, int min, int max)
+        {
+            while (true)
+            {
+                Console.Write(prompt);
+                if (int.TryParse(Console.ReadLine(), out int value) && value >= min && value <= max)
+                {
+                    return value;
+                }
+                Console.WriteLine($"Помилка: введіть ціле число від {min} до {max}.");
+            }
+        }
+
+        static double ReadDouble(string prompt, double min, double max)
+        {
+            while (true)
+            {
+                Console.Write(prompt);
+                if (double.TryParse(Console.ReadLine(), out double value) && value >= min && value <= max)
+                {
+                    return value;
+                }
+                Console.WriteLine($"Помилка: введіть число від {min} до {max}.");
+            }
+        }
+
         static void ShowAbout()
         {
             Console.WriteLine("Тема: Ветеринарна клініка");
             Console.WriteLine("Головна сутність: Прийом у лікаря");
             Console.WriteLine("Поля запису:");
-            Console.WriteLine("1. id - номер прийому");
+            Console.WriteLine("1. id- номер прийому");
             Console.WriteLine("2. petName - кличка тварини");
             Console.WriteLine("3. species - вид тварини");
             Console.WriteLine("4. age - вік тварини");
@@ -63,7 +89,6 @@ namespace VetClinicApp
             Console.WriteLine("7. cost - вартість у грн");
         }
 
-        // Метод тільки рахує і повертає результат
         static double CalculateCost(double weight)
         {
             return 250 + weight * 35.5 + Math.Sqrt(weight) * 10;
@@ -90,19 +115,8 @@ namespace VetClinicApp
 
         static void ShowVisitsTable()
         {
-            Console.Write("Введіть кількість лікарів (рядків): ");
-            if (!int.TryParse(Console.ReadLine(), out int rows) || rows <= 0)
-            {
-                Console.WriteLine("Помилка: введіть число більше 0.");
-                return;
-            }
-
-            Console.Write("Введіть кількість днів (стовпців): ");
-            if (!int.TryParse(Console.ReadLine(), out int cols) || cols <= 0)
-            {
-                Console.WriteLine("Помилка: введіть число більше 0.");
-                return;
-            }
+            int rows = ReadInt("Введіть кількість лікарів (1-20): ", 1, 20);
+            int cols = ReadInt("Введіть кількість днів (1-7): ", 1, 7);
 
             Console.WriteLine();
 
