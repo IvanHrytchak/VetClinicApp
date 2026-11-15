@@ -21,7 +21,7 @@ namespace VetClinicApp
                 switch (choice)
                 {
                     case "1": ShowAbout(); Pause(); break;
-                    case "2": ShowCostTable(); Pause(); break;
+                    case "2": RunCostTabulation(); Pause(); break;
                     case "3": ShowVisitsTable(); Pause(); break;
                     case "0": running = false; break;
                     default:
@@ -80,7 +80,7 @@ namespace VetClinicApp
             Console.WriteLine("Тема: Ветеринарна клініка");
             Console.WriteLine("Головна сутність: Прийом у лікаря");
             Console.WriteLine("Поля запису:");
-            Console.WriteLine("1. id- номер прийому");
+            Console.WriteLine("1. id - номер прийому");
             Console.WriteLine("2. petName - кличка тварини");
             Console.WriteLine("3. species - вид тварини");
             Console.WriteLine("4. age - вік тварини");
@@ -94,15 +94,18 @@ namespace VetClinicApp
             return 250 + weight * 35.5 + Math.Sqrt(weight) * 10;
         }
 
-        static void ShowCostTable()
+        static void RunCostTabulation()
         {
-            Console.WriteLine("Розрахунок вартості огляду залежно від ваги тварини:");
+            double start = ReadDouble("Введіть початкову вагу тварини (0,5 - 50 кг): ", 0.5, 50.0);
+            double end = ReadDouble($"Введіть кінцеву вагу ({start} - 100 кг): ", start, 100.0);
+            double step = ReadDouble("Введіть крок зміни ваги (0,1 - 20 кг): ", 0.1, 20.0);
+
             Console.WriteLine();
+            PrintCostTable(start, end, step);
+        }
 
-            double startWeight = 1.5;
-            double endWeight = 15.0;
-            double step = 1.5;
-
+        static void PrintCostTable(double startWeight, double endWeight, double step)
+        {
             Console.WriteLine($"{"Вага (кг)",10} | {"Вартість (грн)",15}");
             Console.WriteLine("----------------------------");
 
