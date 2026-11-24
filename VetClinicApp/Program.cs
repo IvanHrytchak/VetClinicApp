@@ -56,6 +56,11 @@ namespace VetClinicApp
                         ShowVisitsList(cardNumbers, petNames, visitSpeciesCodes, ages, ownerLastNames, visitDates, diagnoses, costs, speciesCodes, speciesNames);
                         Pause();
                         break;
+                    case "4":
+                        ShowVisitsBySpeciesSummary(speciesCodes, speciesNames, visitSpeciesCodes, out int totalVisits);
+                        Console.WriteLine($"\nЗагальна кількість оброблених прийомів: {totalVisits}");
+                        Pause();
+                        break;
                     case "0":
                         running = false;
                         break;
@@ -73,6 +78,7 @@ namespace VetClinicApp
             Console.WriteLine("1 - Довідка про програму та сутності");
             Console.WriteLine("2 - Таблиця вартості прийому");
             Console.WriteLine("3 - Переглянути список усіх прийомів");
+            Console.WriteLine("4 - Кількість прийомів за видами тварин");
             Console.WriteLine("0 - Вихід");
             Console.Write("Ваш вибір: ");
         }
@@ -169,6 +175,37 @@ namespace VetClinicApp
                 string speciesName = GetSpeciesNameByCode(visitSpeciesCodes[i], speciesCodes, speciesNames);
                 Console.WriteLine($"{cardNumbers[i],-7} | {petNames[i],-10} | {speciesName,-8} | {ages[i],-4} | {ownerLastNames[i],-12} | {visitDates[i]:dd.MM.yyyy} | {diagnoses[i],-14} | {costs[i],9:F2}");
             }
+        }
+
+        static void ShowVisitsBySpeciesSummary(
+            int[] speciesCodes,
+            string[] speciesNames,
+            int[] visitSpeciesCodes,
+            out int totalVisits)
+        {
+            totalVisits = 0;
+
+            Console.WriteLine("=== ПІДСУМОК: КІЛЬКІСТЬ ПРИЙОМІВ ЗА ВИДАМИ ТВАРИН ===");
+            Console.WriteLine($"{"Код",-5} | {"Вид тварини",-15} | {"Кількість прийомів",20}");
+            Console.WriteLine(new string('-', 46));
+
+            for (int i = 0; i < speciesCodes.Length; i++)
+            {
+                int count = 0;
+                for (int j = 0; j < visitSpeciesCodes.Length; j++)
+                {
+                    if (visitSpeciesCodes[j] == speciesCodes[i])
+                    {
+                        count++;
+                    }
+                }
+
+                Console.WriteLine($"{speciesCodes[i],-5} | {speciesNames[i],-15} | {count,20}");
+                totalVisits += count;
+            }
+
+            Console.WriteLine(new string('-', 46));
+            Console.WriteLine($"{"",-5} | {"УСЬОГО",-15} | {totalVisits,20}");
         }
     }
 }
