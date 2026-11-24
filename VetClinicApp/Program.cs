@@ -52,6 +52,10 @@ namespace VetClinicApp
                         PrintCostTable(start, end, step);
                         Pause();
                         break;
+                    case "3":
+                        ShowVisitsList(cardNumbers, petNames, visitSpeciesCodes, ages, ownerLastNames, visitDates, diagnoses, costs, speciesCodes, speciesNames);
+                        Pause();
+                        break;
                     case "0":
                         running = false;
                         break;
@@ -68,6 +72,7 @@ namespace VetClinicApp
             Console.WriteLine("=== Ветеринарна клініка ===");
             Console.WriteLine("1 - Довідка про програму та сутності");
             Console.WriteLine("2 - Таблиця вартості прийому");
+            Console.WriteLine("3 - Переглянути список усіх прийомів");
             Console.WriteLine("0 - Вихід");
             Console.Write("Ваш вибір: ");
         }
@@ -129,6 +134,40 @@ namespace VetClinicApp
             {
                 double price = CalculateCost(w);
                 Console.WriteLine($"{w,10:F2} | {price,15:F2}");
+            }
+        }
+
+        static string GetSpeciesNameByCode(int code, int[] speciesCodes, string[] speciesNames)
+        {
+            for (int i = 0; i < speciesCodes.Length; i++)
+            {
+                if (speciesCodes[i] == code)
+                {
+                    return speciesNames[i];
+                }
+            }
+            return "Невідомо";
+        }
+
+        static void ShowVisitsList(
+            int[] cardNumbers,
+            string[] petNames,
+            int[] visitSpeciesCodes,
+            int[] ages,
+            string[] ownerLastNames,
+            DateTime[] visitDates,
+            string[] diagnoses,
+            double[] costs,
+            int[] speciesCodes,
+            string[] speciesNames)
+        {
+            Console.WriteLine($"{"Картка",-7} | {"Кличка",-10} | {"Вид",-8} | {"Вік",-4} | {"Власник",-12} | {"Дата",-10} | {"Діагноз",-14} | {"Вартість",9}");
+            Console.WriteLine(new string('-', 92));
+
+            for (int i = 0; i < cardNumbers.Length; i++)
+            {
+                string speciesName = GetSpeciesNameByCode(visitSpeciesCodes[i], speciesCodes, speciesNames);
+                Console.WriteLine($"{cardNumbers[i],-7} | {petNames[i],-10} | {speciesName,-8} | {ages[i],-4} | {ownerLastNames[i],-12} | {visitDates[i]:dd.MM.yyyy} | {diagnoses[i],-14} | {costs[i],9:F2}");
             }
         }
     }
