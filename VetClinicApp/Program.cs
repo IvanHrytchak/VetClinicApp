@@ -172,6 +172,24 @@ namespace VetClinicApp
             Console.WriteLine($"Додано прийом з карткою №{cardNumbers[count - 1]}.");
         }
 
+        static int CountVisitsBySpecies(int[] speciesArr, int currentCount, int targetSpeciesCode)
+        {
+            if (currentCount == 0)
+            {
+                return 0;
+            }
+
+            int total = 0;
+            for (int i = 0; i < currentCount; i++)
+            {
+                if (speciesArr[i] == targetSpeciesCode)
+                {
+                    total++;
+                }
+            }
+            return total;
+        }
+
         static void ShowAllVisits()
         {
             if (count == 0)
@@ -189,6 +207,12 @@ namespace VetClinicApp
             }
 
             Console.WriteLine($"\nЗаписів: {count}.");
+
+            Console.WriteLine("\nПідсумкова величина — кількість прийомів за видами тварин:");
+            Console.WriteLine($"  Код 1 (Кіт):    {CountVisitsBySpecies(speciesCodes, count, 1)}");
+            Console.WriteLine($"  Код 2 (Собака): {CountVisitsBySpecies(speciesCodes, count, 2)}");
+            Console.WriteLine($"  Код 3 (Папуга): {CountVisitsBySpecies(speciesCodes, count, 3)}");
+            Console.WriteLine($"  Код 4 (Хом'як): {CountVisitsBySpecies(speciesCodes, count, 4)}");
         }
 
         static void SeedTestData()
