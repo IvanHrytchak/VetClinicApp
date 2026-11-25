@@ -39,6 +39,10 @@ namespace VetClinicApp
                         ShowAllVisits();
                         Pause();
                         break;
+                    case "2":
+                        AddVisit();
+                        Pause();
+                        break;
                     case "3":
                         ShowAbout();
                         Pause();
@@ -47,6 +51,10 @@ namespace VetClinicApp
                         GetTabulationParameters(out double start, out double end, out double step);
                         Console.WriteLine();
                         PrintCostTable(start, end, step);
+                        Pause();
+                        break;
+                    case "5":
+                        SeedTestData();
                         Pause();
                         break;
                     case "0":
@@ -64,8 +72,10 @@ namespace VetClinicApp
         {
             Console.WriteLine("=== Ветеринарна клініка ===");
             Console.WriteLine("1 - Показати всі записи");
+            Console.WriteLine("2 - Додати запис про прийом");
             Console.WriteLine("3 - Довідка про програму та сутність");
             Console.WriteLine("4 - Таблиця вартості прийому (табулювання)");
+            Console.WriteLine("5 - Заповнити тестовими записами");
             Console.WriteLine("0 - Вихід");
             Console.Write("Ваш вибір: ");
         }
@@ -75,6 +85,33 @@ namespace VetClinicApp
             Console.WriteLine("\nНатисніть будь-яку клавішу...");
             Console.ReadKey(true);
             Console.Clear();
+        }
+
+        static string ReadText(string prompt)
+        {
+            while (true)
+            {
+                Console.Write(prompt);
+                string input = Console.ReadLine();
+                if (!string.IsNullOrWhiteSpace(input))
+                {
+                    return input.Trim();
+                }
+                Console.WriteLine("Помилка: рядок не може бути порожнім.");
+            }
+        }
+
+        static int ReadInt(string prompt, int min, int max)
+        {
+            while (true)
+            {
+                Console.Write(prompt);
+                if (int.TryParse(Console.ReadLine(), out int value) && value >= min && value <= max)
+                {
+                    return value;
+                }
+                Console.WriteLine($"Потрібне ціле число від {min} до {max}.");
+            }
         }
 
         static double ReadDouble(string prompt, double min, double max)
@@ -88,6 +125,51 @@ namespace VetClinicApp
                 }
                 Console.WriteLine($"Помилка: введіть число від {min} до {max}.");
             }
+        }
+
+        static DateTime ReadDate(string prompt)
+        {
+            while (true)
+            {
+                Console.Write(prompt);
+                string input = Console.ReadLine();
+                if (DateTime.TryParseExact(input, "dd.MM.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date))
+                {
+                    return date;
+                }
+                Console.WriteLine("Помилка: введіть дату у форматі дд.мм.рррр (наприклад, 25.11.2026).");
+            }
+        }
+
+        static void AddVisit()
+        {
+            if (count == Capacity)
+            {
+                Console.WriteLine("Сховище заповнене, видаліть щось зайве.");
+                return;
+            }
+
+            string petName = ReadText("Кличка тварини: ");
+            int speciesCode = ReadInt("Код виду (1-Кіт, 2-Собака, 3-Папуга, 4-Хом'як): ", 1, 4);
+            int age = ReadInt("Вік тварини (0-50): ", 0, 50);
+            string owner = ReadText("Прізвище власника: ");
+            DateTime visitDate = ReadDate("Дата прийому (дд.мм.рррр): ");
+            string diagnosis = ReadText("Діагноз: ");
+            double cost = ReadDouble("Вартість прийому (0 - 100000 грн): ", 0, 100000);
+
+            cardNumbers[count] = nextId;
+            petNames[count] = petName;
+            speciesCodes[count] = speciesCode;
+            ages[count] = age;
+            ownerLastNames[count] = owner;
+            visitDates[count] = visitDate;
+            diagnoses[count] = diagnosis;
+            costs[count] = cost;
+
+            count++;
+            nextId++;
+
+            Console.WriteLine($"Додано прийом з карткою №{cardNumbers[count - 1]}.");
         }
 
         static void ShowAllVisits()
@@ -107,6 +189,50 @@ namespace VetClinicApp
             }
 
             Console.WriteLine($"\nЗаписів: {count}.");
+        }
+
+        static void SeedTestData()
+        {
+            string[] samplePets = { "Мурчик", "Рекс", "Барсик", "Кеша", "Жук", "Сніжок" };
+            int[] sampleSpecies = { 1, 2, 1, 3, 2, 1 };
+            int[] sampleAges = { 3, 5, 2, 1, 8, 4 };
+            string[] sampleOwners = { "Шевченко", "Коваленко", "Бойко", "Ткаченко", "Мельник", "Кравчук" };
+            DateTime[] sampleDates =
+            {
+                new DateTime(2026, 11, 10),
+                new DateTime(2026, 11, 11),
+                new DateTime(2026, 11, 12),
+                new DateTime(2026, 11, 12),
+                new DateTime(2026, 11, 14),
+                new DateTime(2026, 11, 15)
+            };
+            string[] sampleDiagnoses = { "Вакцинація", "Отит", "Перелом лапи", "Огляд", "Чистка зубів", "Алергія" };
+            double[] sampleCosts = { 450.0, 800.0, 1500.0, 300.0, 1100.0, 650.0 };
+
+            int added = 0;
+            for (int i = 0; i < samplePets.Length; i++)
+            {
+                if (count == Capacity)
+                {
+                    Console.WriteLine("Сховище заповнене, додано лише частину тестових записів.");
+                    break;
+                }
+
+                cardNumbers[count] = nextId;
+                petNames[count] = samplePets[i];
+                speciesCodes[count] = sampleSpecies[i];
+                ages[count] = sampleAges[i];
+                ownerLastNames[count] = sampleOwners[i];
+                visitDates[count] = sampleDates[i];
+                diagnoses[count] = sampleDiagnoses[i];
+                costs[count] = sampleCosts[i];
+
+                count++;
+                nextId++;
+                added++;
+            }
+
+            Console.WriteLine($"Додано тестових записів: {added}. Усього в базі: {count}.");
         }
 
         static void ShowAbout()
